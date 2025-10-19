@@ -1,99 +1,108 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
-from .models import Cart, CartItem
+from .models import Cart
 from .serializers import CartSerializer, CartItemSerializer, CartItemCreateSerializer
+from .services import CartService
 
 class CartDetailView(generics.RetrieveAPIView):
-    """
-    Get current user's active cart with all items
-    """
+    """Get current user's active cart with all items"""
     serializer_class = CartSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-        cart, created = Cart.objects.get_or_create(
-            user=self.request.user,
-            status='active'
-        )
-        return cart
+        return CartService.get_or_create_user_cart(self.request.user)
 
 class CartItemCreateView(generics.CreateAPIView):
-    """
-    Add item to user's cart
-    """
+    """Add item to user's cart using service layer"""
     serializer_class = CartItemCreateSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-    def perform_create(self, serializer):
-        # Get or create user's active cart
-        cart, created = Cart.objects.get_or_create(
-            user=self.request.user,
-            status='active'
-        )
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         
-        # Check if item already exists in cart
-        product = serializer.validated_data['product']
-        quantity = serializer.validated_data['quantity']
+        try:
+            cart_item = CartService.add_item_to_cart(
+                user=request.user,
+                product=serializer.validated_data['product'],
+                quantity=serializer.validated_data['quantity']
+            )
+        except ValueError as e:
+            return Response(
+                {'error': str(e)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
         
-        existing_item = CartItem.objects.filter(cart=cart, product=product).first()
-        
-        if existing_item:
-            # Update quantity if item exists
-            new_quantity = existing_item.quantity + quantity
-            if product.stock_quantity < new_quantity:
-                raise ValidationError({
-                    'quantity': f'Cannot add {quantity} more. Only {product.stock_quantity - existing_item.quantity} additional items available'
-                })
-            existing_item.quantity = new_quantity
-            existing_item.save()
-            self.instance = existing_item
-        else:
-            # Create new cart item
-            serializer.save(cart=cart)
+        response_serializer = CartItemSerializer(cart_item)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
 class CartItemUpdateView(generics.UpdateAPIView):
-    """
-    Update cart item quantity
-    """
+    """Update cart item quantity using service layer"""
     serializer_class = CartItemSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'id'
 
     def get_queryset(self):
-        # Users can only update items in their own cart
         return CartItem.objects.filter(cart__user=self.request.user, cart__status='active')
 
-    def perform_update(self, serializer):
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        new_quantity = serializer.validated_data.get('quantity', instance.quantity)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
         
-        if new_quantity < 1:
-            raise ValidationError({"quantity": "Quantity must be at least 1"})
+        try:
+            cart_item = CartService.update_cart_item_quantity(
+                user=request.user,
+                cart_item_id=instance.id,
+                new_quantity=serializer.validated_data.get('quantity', instance.quantity)
+            )
+        except ValueError as e:
+            return Response(
+                {'error': str(e)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
         
-        if instance.product.stock_quantity < new_quantity:
-            raise ValidationError({
-                "quantity": f"Only {instance.product.stock_quantity} items available in stock"
-            })
-        
-        serializer.save()
+        response_serializer = CartItemSerializer(cart_item)
+        return Response(response_serializer.data)
 
 class CartItemDeleteView(generics.DestroyAPIView):
-    """
-    Remove item from cart
-    """
+    """Remove item from cart using service layer"""
     serializer_class = CartItemSerializer
     permission_classes = [permissions.IsAuthenticated]
     lookup_field = 'id'
 
     def get_queryset(self):
-        # Users can only delete items from their own cart
         return CartItem.objects.filter(cart__user=self.request.user, cart__status='active')
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        self.perform_destroy(instance)
+        
+        try:
+            CartService.remove_item_from_cart(request.user, instance.id)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
         return Response(
             {'message': 'Item removed from cart successfully'}, 
             status=status.HTTP_204_NO_CONTENT
         )
+
+class CartCheckoutView(generics.GenericAPIView):
+    """Checkout cart and complete purchase"""
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = CartSerializer
+
+    def post(self, request):
+        try:
+            cart = CartService.checkout_cart(request.user)
+            serializer = self.get_serializer(cart)
+            return Response(serializer.data)
+        except ValueError as e:
+            return Response(
+                {'error': str(e)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )

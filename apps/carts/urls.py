@@ -8,4 +8,5 @@ urlpatterns = [
     path('items/', views.CartItemCreateView.as_view(), name='cartitem-create'),
     path('items/<uuid:id>/', views.CartItemUpdateView.as_view(), name='cartitem-update'),
     path('items/<uuid:id>/delete/', views.CartItemDeleteView.as_view(), name='cartitem-delete'),
+    path('checkout/', views.CartCheckoutView.as_view(), name='cart-checkout'),  # New endpoint
 ]
