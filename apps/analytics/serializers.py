@@ -1,20 +1,31 @@
 from rest_framework import serializers
+
 from .models import CartEvent
 
+
 class CartEventSerializer(serializers.ModelSerializer):
-    user_email = serializers.CharField(source='user.email', read_only=True)
-    product_name = serializers.CharField(source='product.name', read_only=True)
-    
+    user_email = serializers.CharField(source="user.email", read_only=True)
+    product_name = serializers.CharField(source="product.name", read_only=True)
+
     class Meta:
         model = CartEvent
-        fields = ('id', 'event_type', 'user_email', 'product_name', 
-                 'quantity_changed', 'timestamp', 'session_duration_seconds')
+        fields = (
+            "id",
+            "event_type",
+            "user_email",
+            "product_name",
+            "quantity_changed",
+            "timestamp",
+            "session_duration_seconds",
+        )
+
 
 class AbandonmentRateSerializer(serializers.Serializer):
     abandonment_rate = serializers.FloatField()
     timeframe_days = serializers.IntegerField()
     total_carts = serializers.IntegerField()
     abandoned_carts = serializers.IntegerField()
+
 
 class UserBehaviorSerializer(serializers.Serializer):
     user_id = serializers.UUIDField()
@@ -25,6 +36,7 @@ class UserBehaviorSerializer(serializers.Serializer):
     favorite_products = serializers.ListField()
     total_interactions = serializers.IntegerField()
 
+
 class ProductInsightsSerializer(serializers.Serializer):
     product_id = serializers.UUIDField()
     total_interactions = serializers.IntegerField()
@@ -33,6 +45,7 @@ class ProductInsightsSerializer(serializers.Serializer):
     recent_activity = serializers.IntegerField()
     abandonment_count = serializers.IntegerField()
 
+
 class TimeMetricsSerializer(serializers.Serializer):
     timeframe_days = serializers.IntegerField()
     total_carts = serializers.IntegerField()
@@ -40,6 +53,7 @@ class TimeMetricsSerializer(serializers.Serializer):
     average_session_duration_seconds = serializers.FloatField()
     daily_activity = serializers.ListField()
     most_active_hour = serializers.IntegerField(allow_null=True)
+
 
 class DailyMetricsSerializer(serializers.Serializer):
     date = serializers.CharField()

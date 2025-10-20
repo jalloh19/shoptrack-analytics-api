@@ -2,7 +2,7 @@ from django.apps import AppConfig
 
 
 class ProductsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.products'
-    verbose_name = 'Products Management'
-    verbose_name_plural = 'Products Management'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "apps.products"
+    verbose_name = "Products Management"
+    verbose_name_plural = "Products Management"

@@ -1,5 +1,7 @@
-from django.db import models
 import uuid
+
+from django.db import models
+
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -15,7 +17,7 @@ class Product(models.Model):
         return self.name
 
     class Meta:
-        db_table = 'products'
-        verbose_name = 'Product'
-        verbose_name_plural = 'Products'
-        ordering = ['-created_at']
+        db_table = "products"
+        verbose_name = "Product"
+        verbose_name_plural = "Products"
+        ordering = ["-created_at"]

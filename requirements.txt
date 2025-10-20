@@ -26,3 +26,7 @@ factory_boy==3.3.3
 pytest @ file:///home/task_175812502822361/conda-bld/pytest_1758125086457/work
 pytest-cov==7.0.0
 pytest-django==4.11.1
+drf-yasg==1.21.11
+black==25.9.0
+flake8==7.3.0
+isort==7.0.0
