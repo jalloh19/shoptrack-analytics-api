@@ -9,9 +9,14 @@ from .serializers import (
 from apps.users.models import User
 from apps.products.models import Product
 
+class AdminOnlyPermission(permissions.BasePermission):
+    """Custom permission to only allow admin users"""
+    def has_permission(self, request, view):
+        return request.user and request.user.is_authenticated and request.user.role == 'admin'
+
 class AbandonmentRateView(generics.GenericAPIView):
-    """Get cart abandonment rate analytics"""
-    permission_classes = [permissions.IsAuthenticated]
+    """Get cart abandonment rate analytics - Admin only"""
+    permission_classes = [permissions.IsAuthenticated, AdminOnlyPermission]
     
     def get(self, request):
         days = int(request.GET.get('days', 30))
@@ -49,8 +54,8 @@ class UserBehaviorView(generics.GenericAPIView):
         return Response(serializer.data)
 
 class ProductInsightsView(generics.GenericAPIView):
-    """Get product performance insights"""
-    permission_classes = [permissions.IsAuthenticated]
+    """Get product performance insights - Admin only"""
+    permission_classes = [permissions.IsAuthenticated, AdminOnlyPermission]
     
     def get(self, request, product_id):
         product = get_object_or_404(Product, id=product_id)
@@ -60,8 +65,8 @@ class ProductInsightsView(generics.GenericAPIView):
         return Response(serializer.data)
 
 class TimeMetricsView(generics.GenericAPIView):
-    """Get time-based analytics metrics"""
-    permission_classes = [permissions.IsAuthenticated]
+    """Get time-based analytics metrics - Admin only"""
+    permission_classes = [permissions.IsAuthenticated, AdminOnlyPermission]
     
     def get(self, request):
         days = int(request.GET.get('days', 30))
@@ -71,8 +76,8 @@ class TimeMetricsView(generics.GenericAPIView):
         return Response(serializer.data)
 
 class DailyMetricsView(generics.GenericAPIView):
-    """Get daily summary metrics"""
-    permission_classes = [permissions.IsAuthenticated]
+    """Get daily summary metrics - Admin only"""
+    permission_classes = [permissions.IsAuthenticated, AdminOnlyPermission]
     
     def get(self, request):
         date_str = request.GET.get('date')
@@ -81,6 +86,20 @@ class DailyMetricsView(generics.GenericAPIView):
         daily_metrics = AnalyticsService.get_daily_metrics()
         serializer = DailyMetricsSerializer(daily_metrics)
         return Response(serializer.data)
+
+class FrequentlyAddedTogetherView(generics.GenericAPIView):
+    """Get products frequently added together - Admin only"""
+    permission_classes = [permissions.IsAuthenticated, AdminOnlyPermission]
+    
+    def get(self, request):
+        limit = int(request.GET.get('limit', 10))
+        affinity_pairs = AnalyticsService.get_frequently_added_together(limit)
+        
+        return Response({
+            'affinity_pairs': affinity_pairs,
+            'total_pairs': len(affinity_pairs),
+            'limit': limit
+        })
 
 # Add helper methods to AnalyticsService
 def _get_total_carts_count(days):
@@ -101,28 +120,6 @@ def _get_abandoned_carts_count(days):
         status='abandoned',
         created_at__gte=start_date
     ).count()
-
-
-class FrequentlyAddedTogetherView(generics.GenericAPIView):
-    """Get products frequently added together - Admin only"""
-    permission_classes = [permissions.IsAuthenticated]
-    
-    def get(self, request):
-        # Admin access only
-        if request.user.role != 'admin' and not request.user.is_staff:
-            return Response(
-                {'error': 'Only admin users can access product affinity data'}, 
-                status=403
-            )
-        
-        limit = int(request.GET.get('limit', 10))
-        affinity_pairs = AnalyticsService.get_frequently_added_together(limit)
-        
-        return Response({
-            'affinity_pairs': affinity_pairs,
-            'total_pairs': len(affinity_pairs),
-            'limit': limit
-        })
 
 # Add these to AnalyticsService
 AnalyticsService._get_total_carts_count = staticmethod(_get_total_carts_count)
