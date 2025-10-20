@@ -21,3 +21,8 @@ sqlparse @ file:///io/buildout/croot/sqlparse_1739627228514/work
 typing_extensions @ file:///croot/typing_extensions_1756280817316/work
 urllib3==2.5.0
 wheel==0.45.1
+coverage==7.11.0
+factory_boy==3.3.3
+pytest @ file:///home/task_175812502822361/conda-bld/pytest_1758125086457/work
+pytest-cov==7.0.0
+pytest-django==4.11.1

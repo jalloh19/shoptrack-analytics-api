@@ -8,8 +8,6 @@ from dotenv import load_dotenv
 import os
 import sys
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 SECRET_KEY = 'django-insecure-dev-key-change-in-production'
 DEBUG = True
@@ -59,12 +57,10 @@ INSTALLED_APPS = [
     'django_filters',
 
     # Local apps
-    'users',
-    'products', 
-    'carts',
-    'analytics',
-    'utils',
-
+    'apps.users.apps.UsersConfig',
+    'apps.products.apps.ProductsConfig',
+    'apps.carts.apps.CartsConfig',
+    'apps.analytics.apps.AnalyticsConfig',
 ]
 
 MIDDLEWARE = [
