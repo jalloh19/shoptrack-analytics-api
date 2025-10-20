@@ -141,9 +141,11 @@ class AnalyticsService:
         # In production, you might use more advanced querying
 
         cart_items_query = """
-        SELECT ci1.product_id as product1, ci2.product_id as product2, COUNT(*) as frequency
+        SELECT ci1.product_id as product1, ci2.product_id as product2, COUNT(*) as 
+        frequency
         FROM cart_items ci1
-        JOIN cart_items ci2 ON ci1.cart_id = ci2.cart_id AND ci1.product_id < ci2.product_id
+        JOIN cart_items ci2 ON ci1.cart_id = ci2.cart_id AND 
+        ci1.product_id < ci2.product_id
         GROUP BY ci1.product_id, ci2.product_id
         ORDER BY frequency DESC
         LIMIT %s

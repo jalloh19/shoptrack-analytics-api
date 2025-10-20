@@ -8,7 +8,8 @@ schema_view = get_schema_view(
     openapi.Info(
         title="ShopTrack Analytics API",
         default_version="v1",
-        description="E-commerce analytics platform for tracking shopping cart behavior and reducing abandonment rates",
+        description="E-commerce analytics platform for tracking shopping cart behavior"
+        " and reducing abandonment rates",
         terms_of_service="https://jalloh.com/terms/",
         contact=openapi.Contact(email="support@shoptrack.com"),
         license=openapi.License(name="MIT License"),

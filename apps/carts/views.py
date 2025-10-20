@@ -1,7 +1,7 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
-from .models import Cart, CartItem  # ADD CartItem import
+from .models import CartItem  # ADD CartItem import
 from .serializers import CartItemCreateSerializer, CartItemSerializer, CartSerializer
 from .services import CartService
 
