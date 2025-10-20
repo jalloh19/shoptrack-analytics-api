@@ -1,36 +1,34 @@
 from django.contrib import admin
-
+from django.contrib.auth.admin import UserAdmin
 from .models import User
 
-
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ("email", "username", "role", "is_active", "created_at")
-    list_filter = ("role", "is_active", "created_at")
-    search_fields = ("email", "username")
-    readonly_fields = ("id", "created_at", "updated_at")
-
+class CustomUserAdmin(UserAdmin):
+    """Customized User admin interface"""
+ 
+    # Display fields in list view
+    list_display = ('email', 'username', 'role', 'is_active', 'created_at')
+    list_filter = ('role', 'is_active', 'created_at')
+    search_fields = ('email', 'username', 'first_name', 'last_name')
+    ordering = ('-created_at',)
+  
+    # Fields in edit view
     fieldsets = (
-        ("Login Information", {"fields": ("email", "username", "password")}),
-        ("Profile", {"fields": ("first_name", "last_name", "role")}),
-        (
-            "Permissions",
-            {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
-                ),
-                "classes": ("collapse",),
-            },
-        ),
-        (
-            "Metadata",
-            {
-                "fields": ("id", "created_at", "updated_at", "last_login"),
-                "classes": ("collapse",),
-            },
-        ),
+        (None, {'fields': ('email', 'username', 'password')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name')}),
+        ('Permissions', {'fields': ('role', 'is_active', 'is_staff', 'is_superuser')}),
+        ('Important dates', {'fields': ('last_login', 'created_at', 'updated_at')}),
     )
+    
+    readonly_fields = ('created_at', 'updated_at')
+    
+    # Custom admin actions
+    actions = ['activate_users', 'deactivate_users']
+    
+    def activate_users(self, request, queryset):
+        queryset.update(is_active=True)
+    activate_users.short_description = "Activate selected users"
+    
+    def deactivate_users(self, request, queryset):
+        queryset.update(is_active=False)
+    deactivate_users.short_description = "Deactivate selected users"

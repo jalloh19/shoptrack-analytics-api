@@ -1,0 +1,70 @@
+<!-- templates/api-docs-hub.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}API Documentation Hub - Shoptrack Analytics{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">API Documentation Hub</h1>
+            <p class="lead">Explore our comprehensive API documentation</p>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Swagger UI</h5>
+                    <p class="card-text">Interactive API documentation with testing capabilities.</p>
+                    <a href="{% url 'custom-swagger' %}" class="btn btn-primary" target="_blank">
+                        Open Swagger UI
+                    </a>
+                    <small class="d-block mt-2 text-muted">URL: /docs/swagger/</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">ReDoc</h5>
+                    <p class="card-text">Beautiful, responsive API documentation.</p>
+                    <a href="{% url 'custom-redoc' %}" class="btn btn-success" target="_blank">
+                        Open ReDoc
+                    </a>
+                    <small class="d-block mt-2 text-muted">URL: /docs/redoc/</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>API Endpoints Overview</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <strong>Users API:</strong> User management and authentication
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Products API:</strong> Product catalog and inventory management
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Carts API:</strong> Shopping cart operations
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Analytics API:</strong> Business intelligence and reporting
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

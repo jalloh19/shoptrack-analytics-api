@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}ShopTrack Analytics API - E-commerce Analytics Solution{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">
+                    Track. Analyze. Optimize.
+                </h1>
+                <p class="lead mb-4">
+                    Professional e-commerce analytics API for tracking shopping cart behavior 
+                    and reducing abandonment rates through data-driven insights.
+                </p>
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="{% url 'custom-swagger' %}" class="btn btn-light btn-lg">
+                        <i class="bi bi-terminal me-2"></i>Explore API
+                    </a>
+                    <a href="{% url 'docs-hub' %}" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-book me-2"></i>Documentation
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <div class="position-relative">
+                    <i class="bi bi-graph-up-arrow text-white opacity-25" style="font-size: 15rem;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="display-5 fw-bold mb-3">Powerful Analytics Features</h2>
+            <p class="lead text-muted">Everything you need to understand and optimize your e-commerce performance</p>
+        </div>
+
+        <div class="row g-4">
+            <!-- Feature 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-cart-check feature-icon"></i>
+                        <h4 class="card-title">Cart Analytics</h4>
+                        <p class="card-text text-muted">
+                            Track real-time shopping cart behavior, monitor active sessions, and understand customer journey patterns.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-arrow-left-right feature-icon"></i>
+                        <h4 class="card-title">Abandonment Analysis</h4>
+                        <p class="card-text text-muted">
+                            Identify and analyze cart abandonment rates with detailed insights and actionable recommendations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card feature-card h-100">
+                    <div class="card-body text-center p-4">
+                        <i class="bi bi-graph-up feature-icon"></i>
+                        <h4 class="card-title">Product Insights</h4>
+                        <p class="card-text text-muted">
+                            Gain deep insights into product performance, customer preferences, and sales trends.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- API Status Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h3 class="fw-bold mb-3">Ready to Get Started?</h3>
+                <p class="text-muted mb-4">
+                    Integrate ShopTrack Analytics into your e-commerce platform and start making data-driven decisions today.
+                </p>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    <span class="badge bg-success fs-6">
+                        <i class="bi bi-check-circle me-1"></i>API Online
+                    </span>
+                    <span class="badge bg-primary fs-6">Version 1.0.0</span>
+                    <span class="badge bg-info fs-6">91% Test Coverage</span>
+                </div>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'custom-swagger' %}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-rocket-takeoff me-2"></i>Start Building
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Start Section -->
+<section class="py-5 bg-dark text-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h3 class="fw-bold mb-4">Quick Start</h3>
+                <div class="code-block">
+                    <code>
+# Get your API token<br>
+curl -X POST http://localhost:8000/api/auth/login/ \<br>
+  -H "Content-Type: application/json" \<br>
+  -d '{"email": "user@example.com", "password": "password"}'<br>
+<br>
+# Use in your requests<br>
+curl -H "Authorization: Bearer YOUR_TOKEN" \<br>
+  http://localhost:8000/api/products/
+                    </code>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <h3 class="fw-bold mb-4">API Endpoints</h3>
+                <div class="row">
+                    <div class="col-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><strong>Authentication</strong></li>
+                            <li class="mb-1">POST /api/auth/register/</li>
+                            <li class="mb-1">POST /api/auth/login/</li>
+                            <li class="mb-1">GET /api/auth/profile/</li>
+                        </ul>
+                    </div>
+                    <div class="col-6">
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><strong>Core API</strong></li>
+                            <li class="mb-1">GET /api/products/</li>
+                            <li class="mb-1">GET /api/carts/</li>
+                            <li class="mb-1">GET /api/analytics/</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 100px 0;
+}
+
+.feature-card {
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    color: #667eea;
+    margin-bottom: 1rem;
+}
+
+.code-block {
+    background: #1a1a1a;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.code-block code {
+    color: #e9ecef;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+</style>
+{% endblock %}
